@@ -19,7 +19,7 @@ public class PostRepository {
   }
 
   public Optional<Post> getById(long id) {
-    return Optional.empty();
+    return posts.entrySet().stream().filter(e -> e.getKey() == id).map(Map.Entry::getValue).findFirst();
   }
 
   public Post save(Post post) throws NotFoundException {

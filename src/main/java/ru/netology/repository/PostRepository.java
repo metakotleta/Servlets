@@ -15,11 +15,15 @@ public class PostRepository {
   private ConcurrentHashMap<Long, Post> posts = new ConcurrentHashMap<>();
 
   public List<Post> all() {
-    return posts.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+    return posts.entrySet().stream().map(Map.Entry::getValue).filter(p -> !p.isBeenRemoved()).collect(Collectors.toList());
   }
 
   public Optional<Post> getById(long id) {
-    return posts.entrySet().stream().filter(e -> e.getKey() == id).map(Map.Entry::getValue).findFirst();
+    return posts.entrySet().stream()
+            .filter(e -> e.getKey() == id)
+            .map(Map.Entry::getValue)
+            .filter(p -> !p.isBeenRemoved())
+            .findFirst();
   }
 
   public Post save(Post post) throws NotFoundException {
@@ -34,5 +38,10 @@ public class PostRepository {
   }
 
   public void removeById(long id) {
+    if (posts.containsKey(id)) {
+      posts.get(id).setBeenRemoved(true);
+    } else {
+      throw new NotFoundException();
+    }
   }
 }

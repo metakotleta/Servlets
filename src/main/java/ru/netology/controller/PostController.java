@@ -1,6 +1,7 @@
 package ru.netology.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ru.netology.model.Post;
 import ru.netology.service.PostService;
 
@@ -19,27 +20,30 @@ public class PostController {
   public void all(HttpServletResponse response) throws IOException {
     response.setContentType(APPLICATION_JSON);
     final var data = service.all();
-    final var gson = new Gson();
+    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     response.getWriter().print(gson.toJson(data));
   }
 
   public void getById(long id, HttpServletResponse response) throws IOException {
     response.setContentType(APPLICATION_JSON);
     final var data = service.getById(id);
-    final var gson = new Gson();
+    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     response.getWriter().print(gson.toJson(data));
   }
 
   public void save(Reader body, HttpServletResponse response) throws IOException {
     response.setContentType(APPLICATION_JSON);
-    final var gson = new Gson();
+    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     final var post = gson.fromJson(body, Post.class);
     final var data = service.save(post);
     response.getWriter().print(gson.toJson(data));
   }
 
-  public void removeById(long id, HttpServletResponse response) {
+  public void removeById(long id, HttpServletResponse response) throws IOException {
     response.setContentType(APPLICATION_JSON);
-//   final var data
+    service.removeById(id);
+    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    final var data = service.all();
+    response.getWriter().write(gson.toJson(data));
   }
 }

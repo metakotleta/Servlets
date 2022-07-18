@@ -3,12 +3,12 @@ package ru.netology.repository;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import  javax.servlet.http.HttpServletResponse;
 
 // Stub
 public class PostRepository {
@@ -27,12 +27,12 @@ public class PostRepository {
   }
 
   public Post save(Post post) throws NotFoundException {
-    if (posts.containsKey(post.getId())) {
+    if (posts.containsKey(post.getId()) && !posts.get(post.getId()).isBeenRemoved()) {
       posts.put(post.getId(), post);
     } else if (post.getId() == 0) {
       posts.putIfAbsent(Integer.valueOf(posts.size() + 1).longValue(), post.setId(posts.size() + 1));
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException("Not Found");
     }
     return post;
   }

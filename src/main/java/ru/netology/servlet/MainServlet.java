@@ -1,12 +1,14 @@
 package ru.netology.servlet;
 
 import ru.netology.controller.PostController;
+import ru.netology.exception.NotFoundException;
 import ru.netology.repository.PostRepository;
 import ru.netology.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
@@ -31,7 +33,7 @@ public class MainServlet extends HttpServlet {
       }
       if (method.equals("GET") && path.matches("/api/posts/\\d+")) {
         // easy way
-        final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
+        final var id = parseId(path);
         controller.getById(id, resp);
         return;
       }
@@ -41,15 +43,21 @@ public class MainServlet extends HttpServlet {
       }
       if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
         // easy way
-        final var id = Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
+        final var id = parseId(path);
         controller.removeById(id, resp);
         return;
       }
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    } catch (Exception e) {
+    } catch (IOException e) {
       e.printStackTrace();
       resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    } catch (NotFoundException e) {
+      resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
+  }
+
+  private long parseId(String path) {
+    return Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
   }
 }
 

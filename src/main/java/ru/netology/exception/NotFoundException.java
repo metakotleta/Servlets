@@ -1,5 +1,7 @@
 package ru.netology.exception;
 
+import javax.servlet.http.HttpServletResponse;
+
 public class NotFoundException extends RuntimeException {
   public NotFoundException() {
   }

@@ -8,6 +8,7 @@ import ru.netology.service.PostService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 public class PostController {
   public static final String APPLICATION_JSON = "application/json";
@@ -18,17 +19,13 @@ public class PostController {
   }
 
   public void all(HttpServletResponse response) throws IOException {
-    response.setContentType(APPLICATION_JSON);
     final var data = service.all();
-    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    response.getWriter().print(gson.toJson(data));
+    sendJson(data, response);
   }
 
   public void getById(long id, HttpServletResponse response) throws IOException {
-    response.setContentType(APPLICATION_JSON);
     final var data = service.getById(id);
-    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    response.getWriter().print(gson.toJson(data));
+    sendJson(data, response);
   }
 
   public void save(Reader body, HttpServletResponse response) throws IOException {
@@ -40,10 +37,20 @@ public class PostController {
   }
 
   public void removeById(long id, HttpServletResponse response) throws IOException {
-    response.setContentType(APPLICATION_JSON);
     service.removeById(id);
-    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     final var data = service.all();
+    sendJson(data, response);
+  }
+
+  private void sendJson(Post data, HttpServletResponse response) throws IOException {
+    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    response.setContentType(APPLICATION_JSON);
+    response.getWriter().write(gson.toJson(data));
+  }
+
+  private void sendJson(List<Post> data, HttpServletResponse response) throws IOException {
+    final var gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    response.setContentType(APPLICATION_JSON);
     response.getWriter().write(gson.toJson(data));
   }
 }

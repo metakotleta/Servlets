@@ -1,5 +1,6 @@
 package ru.netology.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
-// Stub
+@Repository
 public class PostRepository {
     private ConcurrentHashMap<Long, Post> posts = new ConcurrentHashMap<>();
 
@@ -26,7 +27,7 @@ public class PostRepository {
                 .findFirst();
     }
 
-    public Post save(Post post) throws NotFoundException {
+    public Post save(Post post) {
         if (posts.containsKey(post.getId()) && !posts.get(post.getId()).isBeenRemoved()) {
             posts.put(post.getId(), post);
         } else if (post.getId() == 0) {
@@ -38,7 +39,7 @@ public class PostRepository {
     }
 
     public void removeById(long id) {
-        if (posts.containsKey(id)) {
+        if (posts.containsKey(id) && !posts.get(id).isBeenRemoved()) {
             posts.get(id).setBeenRemoved(true);
         } else {
             throw new NotFoundException();

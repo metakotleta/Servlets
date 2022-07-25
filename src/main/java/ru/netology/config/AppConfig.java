@@ -8,7 +8,6 @@ import ru.netology.service.PostService;
 
 @Configuration
 public class AppConfig {
-
     @Bean
     public PostController postController(PostService postService) {
         return new PostController(postService);

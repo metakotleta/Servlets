@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 // Stub
 public class PostRepository {
+
     private ConcurrentHashMap<Long, Post> posts = new ConcurrentHashMap<>();
 
     public List<Post> all() {

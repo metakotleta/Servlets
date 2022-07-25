@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
 
 // Stub
 public class PostRepository {
+
     private ConcurrentHashMap<Long, Post> posts = new ConcurrentHashMap<>();
 
     public List<Post> all() {
@@ -38,7 +38,7 @@ public class PostRepository {
     }
 
     public void removeById(long id) {
-        if (posts.containsKey(id)) {
+        if (posts.containsKey(id) && !posts.get(id).isBeenRemoved()) {
             posts.get(id).setBeenRemoved(true);
         } else {
             throw new NotFoundException();

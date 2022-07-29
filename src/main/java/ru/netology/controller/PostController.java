@@ -38,8 +38,7 @@ public class PostController {
 
   public void removeById(long id, HttpServletResponse response) throws IOException {
     service.removeById(id);
-    final var data = service.all();
-    sendJson(data, response);
+    response.setStatus(HttpServletResponse.SC_OK);
   }
 
   private void sendJson(Post data, HttpServletResponse response) throws IOException {
